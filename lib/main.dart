@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'screens/dashboard/dashboard_screen.dart';
 import 'screens/customers/customers_screen.dart';
-import 'screens/services/services_screen.dart';
-import 'screens/calendar/calendar_screen.dart';
-import 'screens/settings/settings_screen.dart';
+import 'screens/service/service_form_screen.dart';
+import 'screens/customer/customer_form_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(const WaterFilterApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class WaterFilterApp extends StatelessWidget {
+  const WaterFilterApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +20,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0061A4),
-          brightness: Brightness.light,
+          seedColor: const Color(0xFF00A3E0),
+          primary: const Color(0xFF0A2540),
+          secondary: const Color(0xFF00A3E0),
+          surface: const Color(0xFFF8FAFC),
         ),
-      ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0061A4),
-          brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFFF1F5F9),
+        cardTheme: const CardTheme(
+          color: Colors.white,
+          elevation: 1,
+          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         ),
       ),
       home: const MainNavigationScreen(),
@@ -50,9 +50,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _screens = const [
     DashboardScreen(),
     CustomersScreen(),
-    ServicesScreen(),
-    CalendarScreen(),
-    SettingsScreen(),
+    ServiceFormScreen(),
+    Center(child: Text('Takvim Ekranı')),
+    Center(child: Text('Daha Fazla Ekranı')),
   ];
 
   @override
@@ -86,13 +86,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             label: 'Servis',
           ),
           NavigationDestination(
-            icon: Icon(Icons.calendar_today_outlined),
-            selectedIcon: Icon(Icons.calendar_today),
+            icon: Icon(Icons.calendar_month_outlined),
+            selectedIcon: Icon(Icons.calendar_month),
             label: 'Takvim',
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings),
+            icon: Icon(Icons.more_horiz),
+            selectedIcon: Icon(Icons.more),
             label: 'Daha Fazla',
           ),
         ],
