@@ -6,7 +6,7 @@ import '../../repositories/customer_repository.dart';
 class CustomerDetailScreen extends StatefulWidget {
   final int customerId;
 
-  const CustomerDetailScreen({Key? key, required this.customerId}) : super(key: key);
+  const CustomerDetailScreen({super.key, required this.customerId});
 
   @override
   State<CustomerDetailScreen> createState() => _CustomerDetailScreenState();
