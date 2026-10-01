@@ -27,10 +27,14 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Re-create Standard Android Project
+      - name: Re-create Standard Android Project & Fix Kotlin Version
         run: |
           flutter create . --platforms=android --org com.suaritma.servis --project-name su_aritma_servis
           rm -f test/widget_test.dart
+          sed -i 's/1.7.10/1.9.0/g' android/build.gradle || true
+          sed -i 's/1.7.1/1.9.0/g' android/build.gradle || true
+          sed -i 's/1.7.10/1.9.0/g' android/settings.gradle || true
+          sed -i 's/1.7.1/1.9.0/g' android/settings.gradle || true
 
       - name: Install Dependencies
         run: flutter pub get
