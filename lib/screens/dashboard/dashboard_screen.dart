@@ -239,7 +239,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.12),
+                  color: Colors.white.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: const Icon(
@@ -287,7 +287,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Text(
             'Bugün',
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.70),
+              color: Colors.white.withOpacity(0.70),
               fontSize: 13,
             ),
           ),
@@ -703,7 +703,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final location = [
       customer.district,
       customer.city,
-    ].where((item) => item != null && item.trim().isNotEmpty).join(' / ');
+    ]
+        .where(
+          (item) => item != null && item.trim().isNotEmpty,
+        )
+        .join(' / ');
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
