@@ -37,7 +37,7 @@ class WaterFilterApp extends StatelessWidget {
           centerTitle: false,
           surfaceTintColor: Colors.transparent,
         ),
-        cardTheme: const CardThemeData(
+        cardTheme: const CardTheme(
           color: Colors.white,
           elevation: 0,
           margin: EdgeInsets.zero,
@@ -49,10 +49,10 @@ class WaterFilterApp extends StatelessWidget {
         navigationBarTheme: NavigationBarThemeData(
           backgroundColor: Colors.white,
           elevation: 8,
-          indicatorColor: accentColor.withValues(alpha: 0.12),
-          labelTextStyle: WidgetStateProperty.resolveWith(
+          indicatorColor: accentColor.withOpacity(0.12),
+          labelTextStyle: MaterialStateProperty.resolveWith(
             (states) {
-              final selected = states.contains(WidgetState.selected);
+              final selected = states.contains(MaterialState.selected);
 
               return TextStyle(
                 fontSize: 12,
@@ -239,12 +239,12 @@ class _MoreMenuCard extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF00A3E0).withValues(alpha: 0.10),
+                  color: const Color(0xFF00A3E0).withOpacity(0.10),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: const Icon(
-                  Icons.settings_outlined,
-                  color: Color(0xFF00A3E0),
+                child: Icon(
+                  icon,
+                  color: const Color(0xFF00A3E0),
                 ),
               ),
               const SizedBox(width: 14),
