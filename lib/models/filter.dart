@@ -28,12 +28,12 @@ class Filter {
 
   factory Filter.fromMap(Map<String, dynamic> map) {
     return Filter(
-      id: map['id'] as int?,
-      name: map['name'] as String? ?? '',
-      type: map['type'] as String? ?? '',
-      replacementPeriodMonths: map['replacement_period_months'] as int? ?? 6,
-      description: map['description'] as String?,
-      isActive: (map['is_active'] as int? ?? 1) == 1,
+      id: map['id'],
+      name: map['name'] ?? '',
+      type: map['type'] ?? '',
+      replacementPeriodMonths: map['replacement_period_months'] ?? 6,
+      description: map['description'],
+      isActive: (map['is_active'] ?? 1) == 1,
     );
   }
 }

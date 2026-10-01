@@ -1,23 +1,23 @@
 class Payment {
   final int? id;
   final int customerId;
-  final int serviceId;
+  final int? serviceId;
   final double amount;
   final String paymentMethod;
-  final DateTime paymentDate;
+  final String paymentDate;
   final String? notes;
-  final DateTime createdAt;
+  final String createdAt;
 
   Payment({
     this.id,
     required this.customerId,
-    required this.serviceId,
+    this.serviceId,
     required this.amount,
     required this.paymentMethod,
     required this.paymentDate,
     this.notes,
-    DateTime? createdAt,
-  }) : createdAt = createdAt ?? DateTime.now();
+    required this.createdAt,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -26,22 +26,22 @@ class Payment {
       'service_id': serviceId,
       'amount': amount,
       'payment_method': paymentMethod,
-      'payment_date': paymentDate.toIso8601String(),
+      'payment_date': paymentDate,
       'notes': notes,
-      'created_at': createdAt.toIso8601String(),
+      'created_at': createdAt,
     };
   }
 
   factory Payment.fromMap(Map<String, dynamic> map) {
     return Payment(
-      id: map['id'] as int?,
-      customerId: map['customer_id'] as int,
-      serviceId: map['service_id'] as int,
-      amount: (map['amount'] as num? ?? 0.0).toDouble(),
-      paymentMethod: map['payment_method'] as String? ?? 'Nakit',
-      paymentDate: map['payment_date'] != null ? DateTime.parse(map['payment_date'] as String) : DateTime.now(),
-      notes: map['notes'] as String?,
-      createdAt: map['created_at'] != null ? DateTime.parse(map['created_at'] as String) : DateTime.now(),
+      id: map['id'],
+      customerId: map['customer_id'],
+      serviceId: map['service_id'],
+      amount: (map['amount'] is num) ? (map['amount'] as num).toDouble() : 0.0,
+      paymentMethod: map['payment_method'] ?? 'Nakit',
+      paymentDate: map['payment_date'] ?? '',
+      notes: map['notes'],
+      createdAt: map['created_at'] ?? '',
     );
   }
 }
