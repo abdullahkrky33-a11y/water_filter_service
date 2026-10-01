@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../models/customer.dart';
-import '../../models/device.dart';
 import '../../repositories/customer_repository.dart';
 
 class CustomerFormScreen extends StatefulWidget {
