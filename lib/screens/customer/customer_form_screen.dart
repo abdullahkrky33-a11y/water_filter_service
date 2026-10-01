@@ -12,7 +12,7 @@ class CustomerFormScreen extends StatefulWidget {
   State<CustomerFormScreen> createState() => _CustomerFormScreenState();
 }
 
-class _CustomerFormScreenState extends StatefulWidget {
+class _CustomerFormScreenState extends State<CustomerFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -20,10 +20,6 @@ class _CustomerFormScreenState extends StatefulWidget {
   final _cityController = TextEditingController();
   final _districtController = TextEditingController();
   final _notesController = TextEditingController();
-
-  final _brandController = TextEditingController();
-  final _modelController = TextEditingController();
-  DateTime? _installationDate;
 
   final CustomerRepository _repository = CustomerRepository();
 
@@ -48,8 +44,6 @@ class _CustomerFormScreenState extends StatefulWidget {
     _cityController.dispose();
     _districtController.dispose();
     _notesController.dispose();
-    _brandController.dispose();
-    _modelController.dispose();
     super.dispose();
   }
 
@@ -67,17 +61,7 @@ class _CustomerFormScreenState extends StatefulWidget {
       );
 
       if (widget.customer == null) {
-        final id = await _repository.insertCustomer(customer);
-        if (_brandController.text.isNotEmpty) {
-          final device = Device(
-            customerId: id,
-            brand: _brandController.text,
-            model: _modelController.text,
-            installationDate: _installationDate?.toIso8601String(),
-            createdAt: DateTime.now().toIso8601String(),
-          );
-          await _repository.insertDevice(device);
-        }
+        await _repository.insertCustomer(customer);
       } else {
         await _repository.updateCustomer(customer);
       }
