@@ -5,7 +5,7 @@ import '../models/payment.dart';
 class ServiceRepository {
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
-  Future<List<ServiceRecord>> getUpcomingServices() async {
+  Future<List<ServiceRecord>> getUpcomingServices({int? daysAhead}) async {
     final db = await _dbHelper.database;
     final maps = await db.query('service_records', orderBy: 'next_service_date ASC');
     return maps.map((map) => ServiceRecord.fromMap(map)).toList();

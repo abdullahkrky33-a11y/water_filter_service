@@ -8,6 +8,7 @@ class Device {
   final String? deviceType;
   final String? tankCapacity;
   final String? pumpType;
+  final int filterChangePeriodMonths;
   final String createdAt;
   final String? updatedAt;
 
@@ -21,9 +22,12 @@ class Device {
     this.deviceType,
     this.tankCapacity,
     this.pumpType,
+    this.filterChangePeriodMonths = 6,
     required this.createdAt,
     this.updatedAt,
   });
+
+  String get brandModel => '$brand $model'.trim();
 
   Map<String, dynamic> toMap() {
     return {
@@ -36,6 +40,7 @@ class Device {
       'device_type': deviceType,
       'tank_capacity': tankCapacity,
       'pump_type': pumpType,
+      'filter_change_period_months': filterChangePeriodMonths,
       'created_at': createdAt,
       'updated_at': updatedAt,
     };
@@ -52,6 +57,7 @@ class Device {
       deviceType: map['device_type'],
       tankCapacity: map['tank_capacity'],
       pumpType: map['pump_type'],
+      filterChangePeriodMonths: map['filter_change_period_months'] ?? 6,
       createdAt: map['created_at'] ?? '',
       updatedAt: map['updated_at'],
     );
