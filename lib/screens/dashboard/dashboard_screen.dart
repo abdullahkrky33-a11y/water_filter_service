@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_constants.dart';
-import '../../core/theme/app_theme.dart';
+import '../../models/service_record.dart';
+import '../../repositories/service_repository.dart';
+import '../customer/customer_list_screen.dart';
+import '../customer/customer_detail_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -10,197 +12,133 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  int _selectedIndex = 0;
+  final _serviceRepo = ServiceRepository();
+  List<ServiceRecord> _upcomingServices = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDashboardData();
+  }
+
+  Future<void> _loadDashboardData() async {
+    setState(() => _isLoading = true);
+    final upcoming = await _serviceRepo.getUpcomingServices(daysAhead: 30);
+    setState(() {
+      _upcomingServices = upcoming;
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(AppConstants.appName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-            Text('Saha Yönetim Paneli', style: TextStyle(fontSize: 12, color: Colors.grey)),
-          ],
-        ),
+        title: const Text('Su Arıtma Servis Takip'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_active_outlined),
-            onPressed: () {},
+            icon: const Icon(Icons.refresh),
+            onPressed: _loadDashboardData,
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: RefreshIndicator(
+        onRefresh: _loadDashboardData,
+        child: ListView(
+          padding: const EdgeInsets.all(16.0),
           children: [
-            // Özet Bilgi Kartları Grid
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 1.4,
-              children: [
-                _buildSummaryCard(
-                  title: 'Toplam Müşteri',
-                  value: '0',
-                  icon: Icons.people_alt,
-                  color: AppTheme.primaryBlue,
-                ),
-                _buildSummaryCard(
-                  title: 'Yaklaşan Filtre',
-                  value: '0',
-                  icon: Icons.filter_alt_sharp,
-                  color: Colors.orange,
-                ),
-                _buildSummaryCard(
-                  title: 'Bugünkü Servisler',
-                  value: '0',
-                  icon: Icons.build_circle,
-                  color: Colors.green,
-                ),
-                _buildSummaryCard(
-                  title: 'Bekleyen Ödeme',
-                  value: '0 TL',
-                  icon: Icons.account_balance_wallet,
-                  color: Colors.redAccent,
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // Hızlı İşlem Butonları
-            const Text(
-              'Hızlı İşlemler',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
+            // Hızlı Menü Kartları
             Row(
               children: [
                 Expanded(
-                  child: _buildActionButton(
-                    label: 'Müşteri Ekle',
-                    icon: Icons.person_add_alt_1,
-                    color: AppTheme.primaryBlue,
-                    onTap: () {},
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildActionButton(
-                    label: 'Servis Kaydı',
-                    icon: Icons.add_task,
-                    color: Colors.teal,
-                    onTap: () {},
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const CustomerListScreen()),
+                      );
+                    },
+                    child: Card(
+                      color: Colors.blue.shade700,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
+                        child: Column(
+                          children: [
+                            Icon(Icons.people, size: 36, color: Colors.white),
+                            SizedBox(height: 8),
+                            Text(
+                              'Müşteriler',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
-
-            // Bugünkü Randevular Listesi
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Bugünkü Servisler',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  'Yaklaşan / Günü Gelen Bakımlar',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Tümünü Gör'),
+                Chip(
+                  label: Text('${_upcomingServices.length} Müşteri'),
+                  backgroundColor: Colors.orange.shade100,
                 ),
               ],
             ),
-            Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              child: const Padding(
-                padding: EdgeInsets.all(24.0),
+            const Divider(),
+            if (_isLoading)
+              const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator()))
+            else if (_upcomingServices.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(30.0),
                 child: Center(
-                  child: Column(
-                    children: [
-                      Icon(Icons.event_available, size: 48, color: Colors.grey),
-                      SizedBox(height: 8),
-                      Text('Bugün için kayıtlı servis bulunmuyor.', style: TextStyle(color: Colors.grey)),
-                    ],
+                  child: Text(
+                    'Önümüzdeki 30 gün içinde bakımı gelen müşteri bulunmuyor.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey, fontSize: 15),
                   ),
                 ),
+              )
+            else
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _upcomingServices.length,
+                itemBuilder: (context, index) {
+                  final service = _upcomingServices[index];
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 6),
+                    child: ListTile(
+                      leading: const CircleAvatar(
+                        backgroundColor: Colors.orange,
+                        child: Icon(Icons.build, color: Colors.white),
+                      ),
+                      title: Text('Müşteri ID: #${service.customerId}'),
+                      subtitle: Text(
+                        'Tarih: ${service.nextServiceDate.day}.${service.nextServiceDate.month}.${service.nextServiceDate.year}',
+                      ),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CustomerDetailScreen(customerId: service.customerId),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (index) => setState(() => _selectedIndex = index),
-        selectedItemColor: AppTheme.primaryBlue,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Ana Panel'),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Müşteriler'),
-          BottomNavigationBarItem(icon: Icon(Icons.build), label: 'Servisler'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: 'Takvim'),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSummaryCard({
-    required String title,
-    required String value,
-    required IconData icon,
-    required Color color,
-  }) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(title, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                Icon(icon, color: color, size: 20),
-              ],
-            ),
-            Text(
-              value,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionButton({
-    required String label,
-    required IconData icon,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.3)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: 20),
-            const SizedBox(width: 8),
-            Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w600)),
           ],
         ),
       ),
