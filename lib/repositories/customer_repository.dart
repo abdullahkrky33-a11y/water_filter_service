@@ -11,6 +11,16 @@ class CustomerRepository {
     return await db.insert('customers', customer.toMap());
   }
 
+  Future<int> updateCustomer(Customer customer) async {
+    final db = await _dbHelper.database;
+    return await db.update(
+      'customers',
+      customer.toMap(),
+      where: 'id = ?',
+      whereArgs: [customer.id],
+    );
+  }
+
   Future<int> insertDevice(Device device) async {
     final db = await _dbHelper.database;
     return await db.insert('devices', device.toMap());
