@@ -1,38 +1,23 @@
-import '../database/database_helper.dart';
+import '../core/database_helper.dart';
 import '../models/service_record.dart';
+import '../models/payment.dart';
 
 class ServiceRepository {
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
-  Future<int> insertService(ServiceRecord service) async {
+  Future<List<ServiceRecord>> getUpcomingServices() async {
     final db = await _dbHelper.database;
-    return await db.insert('service_records', service.toMap());
+    final maps = await db.query('service_records', orderBy: 'next_service_date ASC');
+    return maps.map((map) => ServiceRecord.fromMap(map)).toList();
   }
 
-  Future<List<ServiceRecord>> getServicesByCustomerId(int customerId) async {
+  Future<int> insertServiceRecord(ServiceRecord record) async {
     final db = await _dbHelper.database;
-    final result = await db.query(
-      'service_records',
-      where: 'customer_id = ?',
-      whereArgs: [customerId],
-      orderBy: 'service_date DESC',
-    );
-    return result.map((json) => ServiceRecord.fromMap(json)).toList();
+    return await db.insert('service_records', record.toMap());
   }
 
-  Future<List<ServiceRecord>> getAllServices() async {
+  Future<int> insertPayment(Payment payment) async {
     final db = await _dbHelper.database;
-    final result = await db.query('service_records', orderBy: 'service_date DESC');
-    return result.map((json) => ServiceRecord.fromMap(json)).toList();
-  }
-
-  Future<int> updateServiceStatus(int serviceId, String status) async {
-    final db = await _dbHelper.database;
-    return await db.update(
-      'service_records',
-      {'payment_status': status},
-      where: 'id = ?',
-      whereArgs: [serviceId],
-    );
+    return await db.insert('payments', payment.toMap());
   }
 }

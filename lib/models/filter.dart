@@ -37,3 +37,15 @@ class Filter {
     );
   }
 }
+
+class FilterItem {
+  final int? id;
+  final String name;
+  bool isSelected;
+
+  FilterItem({
+    this.id,
+    required this.name,
+    this.isSelected = false,
+  });
+}
