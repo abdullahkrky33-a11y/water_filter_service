@@ -28,7 +28,7 @@ jobs:
           cache: true
 
       - name: Re-create Standard Android Project
-        run: flutter create . --platforms=android --org com.suaritma.servis --template=app
+        run: flutter create . --platforms=android --org com.suaritma.servis --project-name su_aritma_servis
 
       - name: Install Dependencies
         run: flutter pub get

@@ -35,7 +35,7 @@ void main() {
       final filterMap = {
         'id': 101,
         'name': 'Sediment Filtre',
-        'type': ' Ön Filtre',
+        'type': 'Ön Filtre',
         'replacement_period_months': 6,
         'description': '5 Mikron tortu filtresi',
         'is_active': 1,
