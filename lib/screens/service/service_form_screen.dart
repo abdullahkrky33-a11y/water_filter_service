@@ -86,17 +86,19 @@ class _ServiceFormScreenState extends State<ServiceFormScreen> {
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0A2540),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0A2540),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Servis kaydı başarıyla oluşturuldu!')),
+                    );
+                  },
+                  child: const Text('SERVİSİ KAYDET', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Servis kaydı başarıyla oluşturuldu!')),
-                  );
-                },
-                child: const Text('SERVİSİ KAYDET', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ],
           ),

@@ -38,11 +38,11 @@ class FinanceScreen extends StatelessWidget {
             const SizedBox(height: 20),
             const Text('Son Tahsilat ve Ödemeler', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
-            Expanded(
+            const Expanded(
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Icon(Icons.receipt_long, size: 64, color: Colors.grey),
                     SizedBox(height: 12),
                     Text('Henüz mali işlem kaydı bulunmuyor.', style: TextStyle(color: Colors.grey, fontSize: 16)),
