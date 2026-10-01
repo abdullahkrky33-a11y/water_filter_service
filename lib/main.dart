@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/dashboard/dashboard_screen.dart';
 import 'screens/customers/customers_screen.dart';
 import 'screens/service/service_form_screen.dart';
+import 'screens/finance/finance_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,8 +51,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     DashboardScreen(),
     CustomersScreen(),
     ServiceFormScreen(),
-    Center(child: Text('Takvim Ekranı')),
-    Center(child: Text('Daha Fazla Ekranı')),
+    FinanceScreen(),
+    Center(child: Text('Daha Fazla Ekranı', style: TextStyle(fontSize: 18))),
   ];
 
   @override
@@ -85,9 +86,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             label: 'Servis',
           ),
           NavigationDestination(
-            icon: Icon(Icons.calendar_month_outlined),
-            selectedIcon: Icon(Icons.calendar_month),
-            label: 'Takvim',
+            icon: Icon(Icons.account_balance_wallet_outlined),
+            selectedIcon: Icon(Icons.account_balance_wallet),
+            label: 'Mali İşler',
           ),
           NavigationDestination(
             icon: Icon(Icons.more_horiz),
