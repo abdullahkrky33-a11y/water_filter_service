@@ -1,5 +1,7 @@
-import '../database/database_helper.dart';
+import 'package:sqflite/sqflite.dart';
+import '../core/database_helper.dart';
 import '../models/customer.dart';
+import '../models/device.dart';
 
 class CustomerRepository {
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
@@ -9,52 +11,32 @@ class CustomerRepository {
     return await db.insert('customers', customer.toMap());
   }
 
+  Future<int> insertDevice(Device device) async {
+    final db = await _dbHelper.database;
+    return await db.insert('devices', device.toMap());
+  }
+
   Future<List<Customer>> getAllCustomers() async {
     final db = await _dbHelper.database;
-    final result = await db.query('customers', where: 'is_active = 1', orderBy: 'first_name ASC');
-    return result.map((json) => Customer.fromMap(json)).toList();
+    final maps = await db.query('customers', orderBy: 'id DESC');
+    return maps.map((map) => Customer.fromMap(map)).toList();
   }
 
   Future<Customer?> getCustomerById(int id) async {
     final db = await _dbHelper.database;
-    final maps = await db.query(
-      'customers',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    final maps = await db.query('customers', where: 'id = ?', whereArgs: [id]);
     if (maps.isNotEmpty) {
       return Customer.fromMap(maps.first);
     }
     return null;
   }
 
-  Future<List<Customer>> searchCustomers(String query) async {
+  Future<Device?> getDeviceByCustomerId(int customerId) async {
     final db = await _dbHelper.database;
-    final result = await db.query(
-      'customers',
-      where: '(first_name LIKE ? OR last_name LIKE ? OR phone LIKE ? OR address LIKE ?) AND is_active = 1',
-      whereArgs: ['%$query%', '%$query%', '%$query%', '%$query%'],
-    );
-    return result.map((json) => Customer.fromMap(json)).toList();
-  }
-
-  Future<int> updateCustomer(Customer customer) async {
-    final db = await _dbHelper.database;
-    return await db.update(
-      'customers',
-      customer.toMap(),
-      where: 'id = ?',
-      whereArgs: [customer.id],
-    );
-  }
-
-  Future<int> deleteCustomer(int id) async {
-    final db = await _dbHelper.database;
-    return await db.update(
-      'customers',
-      {'is_active': 0},
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    final maps = await db.query('devices', where: 'customer_id = ?', whereArgs: [customerId]);
+    if (maps.isNotEmpty) {
+      return Device.fromMap(maps.first);
+    }
+    return null;
   }
 }
