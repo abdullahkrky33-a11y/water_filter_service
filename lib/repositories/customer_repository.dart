@@ -32,6 +32,17 @@ class CustomerRepository {
     return maps.map((map) => Customer.fromMap(map)).toList();
   }
 
+  Future<List<Customer>> searchCustomers(String query) async {
+    final db = await _dbHelper.database;
+    final maps = await db.query(
+      'customers',
+      where: 'full_name LIKE ? OR phone LIKE ?',
+      whereArgs: ['%$query%', '%$query%'],
+      orderBy: 'id DESC',
+    );
+    return maps.map((map) => Customer.fromMap(map)).toList();
+  }
+
   Future<Customer?> getCustomerById(int id) async {
     final db = await _dbHelper.database;
     final maps = await db.query('customers', where: 'id = ?', whereArgs: [id]);
