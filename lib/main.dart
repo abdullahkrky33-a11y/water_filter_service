@@ -1,33 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'core/theme/app_theme.dart';
-import 'screens/dashboard/dashboard_screen.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const SuAritmaApp());
+  runApp(const MyApp());
 }
 
-class SuAritmaApp extends StatelessWidget {
-  const SuAritmaApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Su Arıtma Servis',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('tr', 'TR'),
-      ],
-      home: const DashboardScreen(),
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Colors.blue,
+      ),
+      home: const Scaffold(
+        body: Center(
+          child: Text('Su Arıtma Servis Yönetimi'),
+        ),
+      ),
     );
   }
 }
