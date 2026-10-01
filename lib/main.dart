@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'screens/dashboard/dashboard_screen.dart';
 import 'screens/customers/customers_screen.dart';
 import 'screens/service/service_form_screen.dart';
-import 'screens/customer/customer_form_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
