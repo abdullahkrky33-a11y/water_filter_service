@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'screens/dashboard/dashboard_screen.dart';
+
 import 'screens/customers/customers_screen.dart';
-import 'screens/service/service_form_screen.dart';
+import 'screens/dashboard/dashboard_screen.dart';
 import 'screens/finance/finance_screen.dart';
+import 'screens/service/service_form_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,22 +15,78 @@ class WaterFilterApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const primaryColor = Color(0xFF0A2540);
+    const accentColor = Color(0xFF00A3E0);
+
     return MaterialApp(
-      title: 'Su Arıtma Servis',
+      title: 'Su Arıtma Servis Yönetimi',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF00A3E0),
-          primary: const Color(0xFF0A2540),
-          secondary: const Color(0xFF00A3E0),
-          surface: const Color(0xFFF8FAFC),
+          seedColor: accentColor,
+          primary: primaryColor,
+          secondary: accentColor,
+          surface: const Color(0xFFF7F9FC),
         ),
-        scaffoldBackgroundColor: const Color(0xFFF1F5F9),
-        cardTheme: const CardTheme(
+        scaffoldBackgroundColor: const Color(0xFFF7F9FC),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: primaryColor,
+          elevation: 0,
+          centerTitle: false,
+          surfaceTintColor: Colors.transparent,
+        ),
+        cardTheme: const CardThemeData(
           color: Colors.white,
-          elevation: 1,
-          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          elevation: 0,
+          margin: EdgeInsets.zero,
+          surfaceTintColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+          ),
+        ),
+        navigationBarTheme: NavigationBarThemeData(
+          backgroundColor: Colors.white,
+          elevation: 8,
+          indicatorColor: accentColor.withValues(alpha: 0.12),
+          labelTextStyle: WidgetStateProperty.resolveWith(
+            (states) {
+              final selected = states.contains(WidgetState.selected);
+
+              return TextStyle(
+                fontSize: 12,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+              );
+            },
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(
+              color: Color(0xFFE2E8F0),
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(
+              color: Color(0xFFE2E8F0),
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(
+              color: accentColor,
+              width: 1.5,
+            ),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
         ),
       ),
       home: const MainNavigationScreen(),
@@ -52,8 +109,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     CustomersScreen(),
     ServiceFormScreen(),
     FinanceScreen(),
-    Center(child: Text('Daha Fazla Ekranı', style: TextStyle(fontSize: 18))),
+    MoreScreen(),
   ];
+
+  void _onNavigationChanged(int index) {
+    if (_currentIndex == index) return;
+
+    setState(() {
+      _currentIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +129,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
-        onDestinationSelected: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onDestinationSelected: _onNavigationChanged,
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
+            icon: Icon(Icons.dashboard_outlined),
+            selectedIcon: Icon(Icons.dashboard),
             label: 'Ana Sayfa',
           ),
           NavigationDestination(
@@ -88,14 +149,135 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           NavigationDestination(
             icon: Icon(Icons.account_balance_wallet_outlined),
             selectedIcon: Icon(Icons.account_balance_wallet),
-            label: 'Mali İşler',
+            label: 'Finans',
           ),
           NavigationDestination(
             icon: Icon(Icons.more_horiz),
             selectedIcon: Icon(Icons.more),
-            label: 'Daha Fazla',
+            label: 'Diğer',
           ),
         ],
+      ),
+    );
+  }
+}
+
+class MoreScreen extends StatelessWidget {
+  const MoreScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Diğer',
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _MoreMenuCard(
+            icon: Icons.filter_alt_outlined,
+            title: 'Filtre Takibi',
+            subtitle: 'Filtre değişimlerini ve yaklaşan bakımları takip et',
+            onTap: () {},
+          ),
+          const SizedBox(height: 12),
+          _MoreMenuCard(
+            icon: Icons.bar_chart_outlined,
+            title: 'Raporlar',
+            subtitle: 'Servis, tahsilat ve müşteri raporları',
+            onTap: () {},
+          ),
+          const SizedBox(height: 12),
+          _MoreMenuCard(
+            icon: Icons.inventory_2_outlined,
+            title: 'Stok',
+            subtitle: 'Filtre ve ürün stoklarını yönet',
+            onTap: () {},
+          ),
+          const SizedBox(height: 12),
+          _MoreMenuCard(
+            icon: Icons.settings_outlined,
+            title: 'Ayarlar',
+            subtitle: 'Uygulama ve işletme ayarları',
+            onTap: () {},
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MoreMenuCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  const _MoreMenuCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF00A3E0).withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.settings_outlined,
+                  color: Color(0xFF00A3E0),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF64748B),
+                        height: 1.3,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.chevron_right,
+                color: Color(0xFF94A3B8),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
